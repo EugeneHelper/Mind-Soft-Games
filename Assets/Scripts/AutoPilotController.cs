@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoPilotTractor : TractorModel,IStrategyMove
+public class AutoPilotController : MonoBehaviour, IStrategyMove
 {
     public WayFounder wayFounder;
+    private TractorModel tractorModel=new TractorModel();
     //private float speed = 15;
-
+    
 
     // Update is called once per frame
     void Update()
@@ -15,20 +16,18 @@ public class AutoPilotTractor : TractorModel,IStrategyMove
        
     }
 
-    public void StartMove()
+    public void Moving()
     {
-        StartCoroutine(nameof(Move));
-        StartCoroutine(nameof(RotateAI));
+       Move();
+       RotateAI();
     }
 
 
-    public IEnumerator Move()
+    void Move()
     {
-
-        while (!wayFounder.LastPoint())
+        if (!wayFounder.LastPoint())
         {
-            transform.position += GetDirection() * Speed * Time.deltaTime;
-            yield return null;
+            transform.position += GetDirection() * tractorModel.Speed * Time.deltaTime;
         }
     }
 
@@ -46,20 +45,17 @@ public class AutoPilotTractor : TractorModel,IStrategyMove
 
     }
 
-    IEnumerator RotateAI()
+    void RotateAI()
     {
-        while (transform.TransformDirection(Vector3.forward)!=GetDirection())//угол между transformDir и направлением к NextPoint не равен 0
+        if (transform.TransformDirection(Vector3.forward)!=GetDirection())//угол между transformDir и направлением к NextPoint не равен 0
         {
             transform.forward += Time.deltaTime * GetDirection();
-            yield return null;
         }
-        Debug.Log("Directions are eqaual");
-
     }
 
     private void OnEnable()
     {
-        StartMove();
+        //StartMove();
     }
     private void OnDisable()
     {

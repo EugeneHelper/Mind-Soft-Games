@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TractorController: MonoBehaviour, IStrategyMove
+public class HandController: MonoBehaviour, IStrategyMove
 {
     [SerializeField] private InputController inputController;
     TractorModel tractorModel;
@@ -11,7 +11,7 @@ public class TractorController: MonoBehaviour, IStrategyMove
     {
         tractorModel = new TractorModel();
         tractorModel.PlayerCamera = Camera.main;
-        StartMove();
+        Moving();
     }
 
     void Update()
@@ -19,28 +19,35 @@ public class TractorController: MonoBehaviour, IStrategyMove
         tractorModel.TurnTractorValue = inputController.InpTurnTractorValue;
         tractorModel.MoveValue = inputController.InpMoveValue;
         tractorModel.TurnCameraValue = inputController.InpTurnCameraValue;
+
     }
 
-    public void StartMove()
+    public void Moving()
     {
-        StartCoroutine(nameof(MoveCoroutine));
-    }
+        TurnCamera();
 
-    private IEnumerator MoveCoroutine()
-    {
-        while (true)
+        if (tractorModel.MoveValue != 0)
         {
-            TurnCamera();
-
-            if (tractorModel.MoveValue != 0)
-            {
-                Move();
-                Rot();
-            }
-
-            yield return null;
+            Move();
+            Rot();
         }
     }
+
+    //private IEnumerator MoveCoroutine()
+    //{
+    //    while (true)
+    //    {
+    //        TurnCamera();
+
+    //        if (tractorModel.MoveValue != 0)
+    //        {
+    //            Move();
+    //            Rot();
+    //        }
+
+    //        yield return null;
+    //    }
+    //}
 
     private void TurnCamera()
     {
@@ -58,6 +65,11 @@ public class TractorController: MonoBehaviour, IStrategyMove
     {
          Vector3 move = transform.TransformDirection(Vector3.forward * tractorModel.MoveValue);          
          transform.position += move * Time.deltaTime * tractorModel.Speed;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
 

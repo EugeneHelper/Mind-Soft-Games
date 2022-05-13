@@ -1,4 +1,5 @@
 ﻿internal interface IStrategyMove
 {
-    void StartMove();
+    void Moving();
+  
 }

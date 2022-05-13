@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class TractorModel : MonoBehaviour
+public class TractorModel 
 {
     private Camera playerCamera;
-    private float speed = 20;
+    private float speed =20;
     private float turnSpeed = 40;
     private float lookSpeed = 50;
     private float moveValue;
